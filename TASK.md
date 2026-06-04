@@ -25,8 +25,9 @@ A blog publication app built with Next.js, Supabase, and Stripe.
 ---
 
 ## Tech Stack
-- **Framework:** Next.js 14 (App Router, TypeScript)
-- **Styling:** Tailwind CSS
+- **Framework:** Next.js 16.2.7 (App Router, TypeScript)
+- **UI Runtime:** React 19.2.4
+- **Styling:** Tailwind CSS v4
 - **Database + Auth:** Supabase (PostgreSQL + Supabase Auth)
 - **Payments:** Stripe (Subscription / Checkout)
 - **Deployment:** Vercel
