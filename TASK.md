@@ -43,12 +43,12 @@ A blog publication app built with Next.js, Supabase, and Stripe.
 #### Phase 1 — Project Setup
 | #   | Task                                        | Est. Time | Buffer | Status      |
 |-----|---------------------------------------------|-----------|--------|-------------|
-| 1.1 | Create Next.js project (TS + Tailwind)      | 15 min    | 15 min | [ ] Pending |
-| 1.2 | Create Supabase project + run SQL tables    | 30 min    | 30 min | [ ] Pending |
-| 1.3 | Configure .env.local with API keys          | 10 min    | 15 min | [ ] Pending |
-| 1.4 | Install dependencies (supabase-js, stripe)  | 10 min    | 10 min | [ ] Pending |
-| 1.5 | Setup folder structure (lib/, components/)  | 15 min    | 15 min | [ ] Pending |
-| 1.6 | Push initial commit + TASKS.md to GitHub    | 15 min    | 10 min | [ ] Pending |
+| 1.1 | Create Next.js project (TS + Tailwind)      | 15 min    | 15 min | [x] Done    |
+| 1.2 | Create Supabase project + run SQL tables    | 30 min    | 30 min | [x] Done    |
+| 1.3 | Configure .env.local with API keys          | 10 min    | 15 min | [x] Done    |
+| 1.4 | Install dependencies (supabase-js, stripe)  | 10 min    | 10 min | [x] Done    |
+| 1.5 | Setup folder structure (lib/, components/)  | 15 min    | 15 min | [x] Done    |
+| 1.6 | Push initial commit + TASKS.md to GitHub    | 15 min    | 10 min | [x] Done    |
 | 1.7 | Create PROGRESS.md + write Day 1 entry      | 15 min    | 10 min | [ ] Pending |
 
 **Phase 1 Total: ~2 hours** (task: 1h 30min + buffer: 55min)
