@@ -49,7 +49,7 @@ A blog publication app built with Next.js, Supabase, and Stripe.
 | 1.4 | Install dependencies (supabase-js, stripe)  | 10 min    | 10 min | [x] Done    |
 | 1.5 | Setup folder structure (lib/, components/)  | 15 min    | 15 min | [x] Done    |
 | 1.6 | Push initial commit + TASKS.md to GitHub    | 15 min    | 10 min | [x] Done    |
-| 1.7 | Create PROGRESS.md + write Day 1 entry      | 15 min    | 10 min | [ ] Pending |
+| 1.7 | Create PROGRESS.md + write Day 1 entry      | 15 min    | 10 min | [x] Done    |
 
 **Phase 1 Total: ~2 hours** (task: 1h 30min + buffer: 55min)
 
@@ -58,11 +58,11 @@ A blog publication app built with Next.js, Supabase, and Stripe.
 #### Phase 2 — Authentication
 | #   | Task                                        | Est. Time | Buffer | Status      |
 |-----|---------------------------------------------|-----------|--------|-------------|
-| 2.1 | Create Supabase client (lib/supabase.ts)    | 20 min    | 20 min | [ ] Pending |
-| 2.2 | Build Signup page (email + password form)   | 40 min    | 20 min | [ ] Pending |
-| 2.3 | Build Login page                            | 30 min    | 15 min | [ ] Pending |
-| 2.4 | Add Navbar with auth state (login/logout)   | 40 min    | 20 min | [ ] Pending |
-| 2.5 | Protect /admin routes via middleware.ts     | 30 min    | 20 min | [ ] Pending |
+| 2.1 | Create Supabase client (lib/supabase.ts)    | 20 min    | 20 min | [x] Done    |
+| 2.2 | Build Signup page (email + password form)   | 40 min    | 20 min | [x] Done    |
+| 2.3 | Build Login page                            | 30 min    | 15 min | [x] Done    |
+| 2.4 | Add Navbar with auth state (login/logout)   | 40 min    | 20 min | [x] Done    |
+| 2.5 | Protect /admin routes via middleware.ts     | 30 min    | 20 min | [x] Done    |
 
 **Phase 2 Total: ~3 hours** (task: 2h 40min + buffer: 1h 15min)
 
