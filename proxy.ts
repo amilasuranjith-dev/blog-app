@@ -30,7 +30,7 @@ function redirectTo(
 }
 
 export async function proxy(request: NextRequest) {
-	let response = NextResponse.next({
+	const response = NextResponse.next({
 		request: {
 			headers: request.headers,
 		},
@@ -62,7 +62,7 @@ export async function proxy(request: NextRequest) {
 		const user = userError ? null : userData.user;
 
 		if (!user) {
-			return redirectTo("/login", request, response, {
+			return redirectTo("/auth/login", request, response, {
 				next: request.nextUrl.pathname,
 			});
 		}
