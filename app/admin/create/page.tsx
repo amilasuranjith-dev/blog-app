@@ -125,6 +125,18 @@ export default function CreatePostPage() {
               placeholder="https://images.unsplash.com/photo-..."
               className="w-full rounded-xl border border-zinc-300 bg-transparent px-4 py-3 text-sm text-zinc-900 placeholder-zinc-400 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-700 dark:text-zinc-50 dark:placeholder-zinc-500 dark:focus:border-zinc-100 dark:focus:ring-zinc-100 transition-colors"
             />
+            {coverImageUrl && (
+              <div className="mt-3 overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800">
+                <img
+                  src={coverImageUrl}
+                  alt="Cover preview"
+                  className="h-48 w-full object-cover"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = 'https://placehold.co/600x400/18181b/ffffff?text=Invalid+Image+URL';
+                  }}
+                />
+              </div>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -132,7 +144,7 @@ export default function CreatePostPage() {
               htmlFor="content"
               className="block text-sm font-medium text-zinc-900 dark:text-zinc-100"
             >
-              Content
+               Content
             </label>
             <textarea
               id="content"
