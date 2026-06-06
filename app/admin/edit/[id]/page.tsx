@@ -4,6 +4,7 @@ import { useEffect, useState, use } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import toast from "react-hot-toast";
 
 export default function EditPostPage({
   params,
@@ -22,7 +23,6 @@ export default function EditPostPage({
 
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
     async function fetchPost() {
@@ -46,7 +46,7 @@ export default function EditPostPage({
         setIsPremium(data.is_premium || false);
         setStatus(data.status || "draft");
       } catch (err: any) {
-        setErrorMsg(err.message || "Failed to load post");
+        toast.error(err.message || "Failed to load post");
       } finally {
         setIsLoading(false);
       }
@@ -58,7 +58,6 @@ export default function EditPostPage({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setErrorMsg("");
 
     try {
       const {
@@ -98,10 +97,12 @@ export default function EditPostPage({
         throw new Error(updateError.message);
       }
 
+      toast.success("Post updated successfully!");
       router.push("/admin");
       router.refresh();
     } catch (error: any) {
-      setErrorMsg(error.message || "Failed to update the post.");
+      toast.error(error.message || "Failed to update the post.");
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -121,12 +122,6 @@ export default function EditPostPage({
             Make changes to your blog post.
           </p>
         </header>
-
-        {errorMsg && (
-          <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800 dark:border-red-900 dark:bg-red-950/40 dark:text-red-200">
-            {errorMsg}
-          </div>
-        )}
 
         {isLoading ? (
           <div className="flex h-64 items-center justify-center rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">

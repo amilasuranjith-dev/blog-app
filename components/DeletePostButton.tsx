@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { deletePost } from "@/app/admin/actions";
+import toast from "react-hot-toast";
 
 export default function DeletePostButton({ id }: { id: string }) {
   const [isPending, startTransition] = useTransition();
@@ -13,8 +14,9 @@ export default function DeletePostButton({ id }: { id: string }) {
           startTransition(async () => {
             try {
               await deletePost(id);
+              toast.success("Post deleted successfully!");
             } catch (error) {
-              alert("Failed to delete post");
+              toast.error("Failed to delete post.");
             }
           });
         }

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import toast from "react-hot-toast";
 
 export default function CreatePostPage() {
   const router = useRouter();
@@ -15,7 +16,6 @@ export default function CreatePostPage() {
   const [isPremium, setIsPremium] = useState(false);
   const [status, setStatus] = useState("draft");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
 
   const generateSlug = (text: string) => {
     return text
@@ -27,7 +27,6 @@ export default function CreatePostPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setErrorMsg("");
 
     try {
       const {
@@ -58,10 +57,12 @@ export default function CreatePostPage() {
         throw new Error(insertError.message);
       }
 
+      toast.success("Post created successfully!");
       router.push("/admin");
       router.refresh(); // Refresh the router to update the admin list
     } catch (error: any) {
-      setErrorMsg(error.message || "Failed to save the post.");
+      toast.error(error.message || "Failed to save the post.");
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -81,12 +82,6 @@ export default function CreatePostPage() {
             Write and publish a new post for your blog.
           </p>
         </header>
-
-        {errorMsg && (
-          <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800 dark:border-red-900 dark:bg-red-950/40 dark:text-red-200">
-            {errorMsg}
-          </div>
-        )}
 
         <form
           onSubmit={handleSubmit}
