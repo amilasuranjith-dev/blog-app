@@ -17,6 +17,8 @@ export default function EditPostPage({
 
   const [title, setTitle] = useState("");
   const [coverImageUrl, setCoverImageUrl] = useState("");
+  const [originalImageUrl, setOriginalImageUrl] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [content, setContent] = useState("");
   const [isPremium, setIsPremium] = useState(false);
   const [status, setStatus] = useState("draft");
@@ -42,6 +44,7 @@ export default function EditPostPage({
 
         setTitle(data.title || "");
         setCoverImageUrl(data.cover_image_url || "");
+        setOriginalImageUrl(data.cover_image_url || "");
         setContent(data.content || "");
         setIsPremium(data.is_premium || false);
         setStatus(data.status || "draft");
@@ -54,6 +57,14 @@ export default function EditPostPage({
 
     fetchPost();
   }, [id, supabase]);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setImageFile(file);
+      setCoverImageUrl(URL.createObjectURL(file));
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,21 +82,39 @@ export default function EditPostPage({
 
       const now = new Date().toISOString();
 
+      let finalImageUrl = coverImageUrl || null;
+
+      if (imageFile) {
+        const fileExt = imageFile.name.split(".").pop();
+        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from("post-images")
+          .upload(fileName, imageFile);
+
+        if (uploadError) {
+          throw new Error(`Image upload failed: ${uploadError.message}`);
+        }
+
+        const { data: publicUrlData } = supabase.storage
+          .from("post-images")
+          .getPublicUrl(fileName);
+
+        finalImageUrl = publicUrlData.publicUrl;
+      }
+
       const postPayload: any = {
         title,
-        cover_image_url: coverImageUrl || null,
+        cover_image_url: finalImageUrl,
         content,
         is_premium: isPremium,
         status,
       };
 
       if (status === "published") {
-        // Only update published_at if we want to reset it or if it wasn't published before.
-        // Actually, requirement is: Sets published_at = now() if status = published
-        // The prompt says "Sets published_at = now() if status = published". Let's do it simply:
         postPayload.published_at = now;
       } else {
-         postPayload.published_at = null;
+        postPayload.published_at = null;
       }
 
       const { error: updateError } = await supabase
@@ -95,6 +124,14 @@ export default function EditPostPage({
 
       if (updateError) {
         throw new Error(updateError.message);
+      }
+
+      // If a new image was uploaded and there was an old image, delete the old one to save space
+      if (imageFile && originalImageUrl) {
+        const oldFilename = originalImageUrl.split("/").pop();
+        if (oldFilename) {
+          await supabase.storage.from("post-images").remove([oldFilename]);
+        }
       }
 
       toast.success("Post updated successfully!");
@@ -154,18 +191,17 @@ export default function EditPostPage({
 
             <div className="space-y-2">
               <label
-                htmlFor="coverImageUrl"
+                htmlFor="coverImage"
                 className="block text-sm font-medium text-zinc-900 dark:text-zinc-100"
               >
-                Cover Image URL (Optional)
+                Cover Image (Optional)
               </label>
               <input
-                id="coverImageUrl"
-                type="url"
-                value={coverImageUrl}
-                onChange={(e) => setCoverImageUrl(e.target.value)}
-                placeholder="https://images.unsplash.com/photo-..."
-                className="w-full rounded-xl border border-zinc-300 bg-transparent px-4 py-3 text-sm text-zinc-900 placeholder-zinc-400 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-700 dark:text-zinc-50 dark:placeholder-zinc-500 dark:focus:border-zinc-100 dark:focus:ring-zinc-100 transition-colors"
+                id="coverImage"
+                type="file"
+                accept="image/jpeg, image/png, image/webp"
+                onChange={handleImageChange}
+                className="w-full rounded-xl border border-zinc-300 bg-transparent px-4 py-3 text-sm text-zinc-900 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-700 dark:text-zinc-50 dark:focus:border-zinc-100 dark:focus:ring-zinc-100 transition-colors file:mr-4 file:rounded-full file:border-0 file:bg-zinc-100 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-zinc-900 hover:file:bg-zinc-200 dark:file:bg-zinc-800 dark:file:text-zinc-50 dark:hover:file:bg-zinc-700"
               />
               {coverImageUrl && (
                 <div className="mt-3 overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800">
