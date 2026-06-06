@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import PremiumBadge from "@/components/PremiumBadge";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 export default async function SinglePostPage({
@@ -94,18 +95,7 @@ export default async function SinglePostPage({
               <div className="whitespace-pre-wrap blur-[3px] opacity-60 select-none overflow-hidden max-h-40">
                 {post.content.slice(0, 150)}...
               </div>
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-t from-zinc-50 via-zinc-50/80 to-transparent dark:from-zinc-950 dark:via-zinc-950/80 pt-12">
-                <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-800 text-center max-w-sm w-full mx-4">
-                  <h3 className="text-xl font-medium text-zinc-900 dark:text-zinc-50 mb-2">Premium Content</h3>
-                  <p className="text-zinc-600 dark:text-zinc-400 mb-6 text-sm">Subscribe to read the full article and get access to all premium posts.</p>
-                  <Link
-                    href="/pricing"
-                    className="inline-flex w-full justify-center items-center rounded-xl bg-zinc-900 px-4 py-3 text-sm font-medium text-white shadow-sm hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 transition-all"
-                  >
-                    Subscribe to read more
-                  </Link>
-                </div>
-              </div>
+              <PremiumBadge />
             </div>
           )}
         </div>
