@@ -1,6 +1,29 @@
 # Progress Log
 
-### Day 1: Friday, June 16 - Setup + Authentication
+### Day 2: Saturday, June 6 - Post CRUD + Storage
+
+**Completed:**
+- Built Admin post list page (integrated robust Server Actions for deletion).
+- Built Create post form.
+- Built Edit post form.
+- Added Delete post with confirm dialog (`DeletePostButton` with Server Actions).
+- Setup Supabase Storage bucket (`post-images`, public with strict RLS policies).
+- Added cover image upload to Create/Edit form (generates public URLs and auto deletes old images).
+- Add react toast notification for better UX
+
+**Next Steps:**
+- Complete Subscription system (Stripe webhook)
+
+**Challenges:**
+- Addressed `isAdmin` state lag due to delayed profile fetching upon initial login.
+- Improved image handling by automatically deleting unused image files when a post is updated or removed.
+- Enhanced UX by seamlessly replacing native browser alerts with `react-hot-toast` notifications.
+
+**Status:** On Track
+
+---
+
+### Day 1: Friday, June 5 - Setup + Authentication
 
 **Completed:**
 - Set up the Next.js 16 blog app with TypeScript and Tailwind CSS v4

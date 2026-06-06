@@ -83,11 +83,11 @@ A blog publication app built with Next.js, Supabase, and Stripe.
 #### Phase 3 — Public Posts (Free Section)
 | #   | Task                                            | Est. Time | Buffer | Status      |
 |-----|-------------------------------------------------|-----------|--------|-------------|
-| 3.1 | Build PostCard component                        | 25 min    | 15 min | [ ] Pending |
-| 3.2 | Build Home page — fetch + list published posts  | 40 min    | 20 min | [ ] Pending |
-| 3.3 | Build Single post page (app/posts/[id])         | 40 min    | 20 min | [ ] Pending |
-| 3.4 | Add premium post blur + Subscribe CTA           | 25 min    | 15 min | [ ] Pending |
-| 3.5 | Build Search page (keyword filter)              | 45 min    | 20 min | [ ] Pending |
+| 3.1 | Build PostCard component                        | 25 min    | 15 min | [x] Done    |
+| 3.2 | Build Home page — fetch + list published posts  | 40 min    | 20 min | [x] Done    |
+| 3.3 | Build Single post page (app/posts/[id])         | 40 min    | 20 min | [x] Done    |
+| 3.4 | Add premium post blur + Subscribe CTA           | 25 min    | 15 min | [x] Done    |
+| 3.5 | Build Search page (keyword filter)              | 45 min    | 20 min | [x] Done    |
 
 **Phase 3 Total: ~4 hours** (task: 2h 55min + buffer: 1h 10min)
 
@@ -96,13 +96,13 @@ A blog publication app built with Next.js, Supabase, and Stripe.
 #### Phase 4 — Admin / Content Management
 | #   | Task                                        | Est. Time | Buffer | Status      |
 |-----|---------------------------------------------|-----------|--------|-------------|
-| 4.1 | Build Admin post list page                  | 40 min    | 20 min | [ ] Pending |
-| 4.2 | Build Create post form                      | 50 min    | 30 min | [ ] Pending |
-| 4.3 | Build Edit post form (pre-fill existing)    | 40 min    | 25 min | [ ] Pending |
-| 4.4 | Add Delete post with confirm dialog         | 25 min    | 15 min | [ ] Pending |
-| 4.5 | Setup Supabase Storage bucket               | 20 min    | 20 min | [ ] Pending |
-| 4.6 | Add cover image upload to Create/Edit form  | 50 min    | 30 min | [ ] Pending |
-| 4.7 | Update PROGRESS.md Day 2 entry + push       | 15 min    | 10 min | [ ] Pending |
+| 4.1 | Build Admin post list page                  | 40 min    | 20 min | [x] Done    |
+| 4.2 | Build Create post form                      | 50 min    | 30 min | [x] Done    |
+| 4.3 | Build Edit post form (pre-fill existing)    | 40 min    | 25 min | [x] Done    |
+| 4.4 | Add Delete post with confirm dialog         | 25 min    | 15 min | [x] Done    |
+| 4.5 | Setup Supabase Storage bucket               | 20 min    | 20 min | [x] Done    |
+| 4.6 | Add cover image upload to Create/Edit form  | 50 min    | 30 min | [x] Done    |
+| 4.7 | Update PROGRESS.md Day 2 entry + push       | 15 min    | 10 min | [x] Done    |
 
 **Phase 4 Total: ~5 hours** (task: 4h + buffer: 2h 10min)
 
