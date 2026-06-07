@@ -1,5 +1,29 @@
 # Progress Log
 
+### Day 3: Sunday, June 7 - Stripe Payments, Editor, and Deployment
+
+**Completed:**
+- Connected Stripe so users can pay to subscribe.
+- Set up a Stripe Webhook to automatically update the database when a user pays.
+- Built a Subscriber Dashboard for paying members.
+- Added a Rich Text Editor (Tiptap) so admins can format blog posts and upload images inside the text.
+- Made the Footer smart so it hides the "Subscribe" link if you are already a paid member or an admin.
+- Successfully deployed the live app to Vercel!
+
+**Next Steps:**
+- Complete final manual testing of the live app.
+- Launch the blog!
+
+**Challenges:**
+- Navigating the complexities of the Stripe Webhook integration proved to be exceptionally challenging.
+- Resolving the intricate issues with the Stripe payment redirection was highly demanding.
+- Fixed a bug where the Footer was looking for the wrong database column for subscriptions.
+- Figured out how to safely update the Stripe live webhook secret in Vercel.
+
+**Status:** Completed!
+
+---
+
 ### Day 2: Saturday, June 6 - Post CRUD + Storage
 
 **Completed:**

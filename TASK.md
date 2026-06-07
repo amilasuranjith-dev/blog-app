@@ -137,11 +137,11 @@ A blog publication app built with Next.js, Supabase, and Stripe.
 #### Phase 6 — Deploy + Final Docs
 | #   | Task                                        | Est. Time | Buffer | Status      |
 |-----|---------------------------------------------|-----------|--------|-------------|
-| 6.1 | Deploy to Vercel + add all env variables    | 25 min    | 20 min | [ ] Pending |
-| 6.2 | Update Stripe webhook URL to Vercel URL     | 10 min    | 10 min | [ ] Pending |
-| 6.3 | End-to-end test (signup, subscribe, post)   | 40 min    | 20 min | [ ] Pending |
-| 6.4 | Finalize README.md with live URL + setup    | 25 min    | 10 min | [ ] Pending |
-| 6.5 | Update PROGRESS.md Day 3 entry + final push | 15 min    | 10 min | [ ] Pending |
+| 6.1 | Deploy to Vercel + add all env variables    | 25 min    | 20 min | [x] Done    |
+| 6.2 | Update Stripe webhook URL to Vercel URL     | 10 min    | 10 min | [x] Done    |
+| 6.3 | End-to-end test (signup, subscribe, post)   | 40 min    | 20 min | [x] Done    |
+| 6.4 | Finalize README.md with live URL + setup    | 25 min    | 10 min | [x] Done    |
+| 6.5 | Update PROGRESS.md Day 3 entry + final push | 15 min    | 10 min | [x] Done    |
 
 **Phase 6 Total: ~3 hours** (task: 1h 55min + buffer: 1h)
 
