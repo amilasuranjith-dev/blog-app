@@ -112,26 +112,18 @@ export default async function SinglePostPage({
               </div>
               
               {/* Overlay with CTA */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center pt-10">
-                <PremiumBadge />
-                <h3 className="mt-6 text-xl font-bold text-zinc-900 dark:text-zinc-50">
-                  Premium Content
-                </h3>
-                <p className="mt-2 mb-8 text-center text-zinc-600 dark:text-zinc-400 max-w-sm">
-                  This post is for premium subscribers only. Unlock full access to read this story and more.
-                </p>
-                
+              <PremiumBadge>
                 {user ? (
                   <SubscribeButton />
                 ) : (
                   <Link 
                     href="/auth/login"
-                    className="rounded-full bg-zinc-900 px-8 py-3.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white"
+                    className="inline-flex w-full justify-center items-center rounded-xl bg-zinc-900 px-4 py-3 text-sm font-medium text-white shadow-sm hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 transition-all"
                   >
                     Login to Subscribe
                   </Link>
                 )}
-              </div>
+              </PremiumBadge>
             </div>
           )}
         </div>
