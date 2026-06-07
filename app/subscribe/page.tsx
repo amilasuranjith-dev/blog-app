@@ -1,11 +1,42 @@
 import SubscribeButton from "@/components/SubscribeButton";
+import { createServerSupabaseClient as createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 
 export const metadata = {
   title: "Subscribe | Premium Blog",
   description: "Get access to exclusive premium blog posts.",
 };
 
-export default function SubscribePage() {
+export default async function SubscribePage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  // If the user is logged in, check their role and subscription status
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    if (profile?.role === "admin") {
+      redirect("/admin"); // Admins don't need to subscribe
+    }
+
+    const { data: subscription } = await supabase
+      .from("subscriptions")
+      .select("*")
+      .eq("user_id", user.id)
+      .eq("status", "active")
+      .gt("current_period_end", new Date().toISOString())
+      .single();
+
+    if (subscription) {
+      // User is already subscribed, redirect them to the dashboard
+      redirect("/dashboard");
+    }
+  }
+
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 bg-white dark:bg-zinc-900 p-8 rounded-3xl shadow-sm border border-zinc-200 dark:border-zinc-800 transition-all hover:shadow-md">

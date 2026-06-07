@@ -1,8 +1,92 @@
+"use client";
+
 import Link from "next/link";
 import { Mail } from "lucide-react";
+import { useEffect, useState, useMemo } from "react";
+import { createBrowserClient } from "@supabase/ssr";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isPremium, setIsPremium] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const supabase = useMemo(
+    () =>
+      createBrowserClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      ),
+    []
+  );
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadUser(userId: string) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", userId)
+        .single();
+
+      if (isMounted && profile) {
+        setIsAdmin(profile.role === "admin");
+        
+        if (profile.role !== "admin") {
+          const { data: subscription } = await supabase
+            .from("subscriptions")
+            .select("id")
+            .eq("user_id", userId)
+            .eq("status", "active")
+            .gt("current_period_end", new Date().toISOString())
+            .single();
+
+          if (subscription) {
+            setIsPremium(true);
+          }
+        }
+      }
+    }
+
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (isMounted) {
+        if (user) {
+          setIsLoggedIn(true);
+          loadUser(user.id);
+        } else {
+          setIsLoggedIn(false);
+          setIsAdmin(false);
+          setIsPremium(false);
+        }
+      }
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (isMounted) {
+          if (session?.user) {
+            setIsLoggedIn(true);
+            loadUser(session.user.id);
+          } else {
+            setIsLoggedIn(false);
+            setIsAdmin(false);
+            setIsPremium(false);
+          }
+        }
+      }
+    );
+
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
+  }, [supabase]);
+
+  const showSubscribe = !isAdmin && !isPremium;
+  const showAdmin = isAdmin;
+  const showDashboard = isLoggedIn && !isAdmin;
 
   return (
     <footer className="mt-auto border-t border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
@@ -49,9 +133,11 @@ export default function Footer() {
               <li>
                 <Link href="/search" className="hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">Search Articles</Link>
               </li>
-              <li>
-                <Link href="/subscribe" className="hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">Subscribe to Premium</Link>
-              </li>
+              {showSubscribe && (
+                <li>
+                  <Link href="/subscribe" className="hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">Subscribe to Premium</Link>
+                </li>
+              )}
             </ul>
           </div>
 
@@ -61,12 +147,21 @@ export default function Footer() {
               Account
             </h3>
             <ul className="space-y-4 text-sm text-zinc-500 dark:text-zinc-400">
-              <li>
-                <Link href="/dashboard" className="hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">Member Portal</Link>
-              </li>
-              <li>
-                <Link href="/admin" className="hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">Admin Dashboard</Link>
-              </li>
+              {showDashboard && (
+                <li>
+                  <Link href="/dashboard" className="hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">Member Portal</Link>
+                </li>
+              )}
+              {showAdmin && (
+                <li>
+                  <Link href="/admin" className="hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">Admin Dashboard</Link>
+                </li>
+              )}
+              {!isLoggedIn && (
+                <li>
+                  <Link href="/auth/login" className="hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">Login / Signup</Link>
+                </li>
+              )}
               <li>
                 <a href="#" className="hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">Privacy Policy</a>
               </li>
