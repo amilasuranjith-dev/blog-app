@@ -60,7 +60,13 @@ STRIPE_PRICE_ID=price_...
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
-### 3. Installation
+### 3. Database Initialization
+Before running the app, you need to set up your Supabase database structure:
+1. Open your Supabase Dashboard and navigate to the **SQL Editor**.
+2. Copy the contents of the `supabase/schema.sql` file from this repository.
+3. Paste and run the SQL script to automatically create all tables, triggers, and Row Level Security policies.
+
+### 4. Installation
 Install the project dependencies using your preferred package manager:
 ```bash
 npm install
@@ -70,7 +76,7 @@ yarn install
 pnpm install
 ```
 
-### 4. Run the Development Server
+### 5. Run the Development Server
 Start the local development server:
 ```bash
 npm run dev
