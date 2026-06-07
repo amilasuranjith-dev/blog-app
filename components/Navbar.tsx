@@ -120,6 +120,15 @@ export default function Navbar() {
             <div className="h-9 w-36 rounded-lg bg-zinc-100 dark:bg-zinc-900" />
           ) : user ? (
             <div className="flex flex-wrap items-center justify-end gap-3 sm:gap-4 w-full sm:w-auto">
+              {!isAdmin && (
+                <Link
+                  href="/dashboard"
+                  className="flex items-center gap-1.5 rounded-lg border border-zinc-300 px-3 py-1.5 text-sm font-medium transition hover:border-zinc-900 hover:text-zinc-950 dark:border-zinc-700 dark:hover:border-zinc-100 dark:hover:text-zinc-50 shrink-0"
+                >
+                  Dashboard
+                </Link>
+              )}
+
               {isAdmin && (
                 <Link
                   href="/admin"
