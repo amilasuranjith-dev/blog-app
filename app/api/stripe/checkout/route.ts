@@ -48,12 +48,28 @@ export async function POST() {
     }
 
     // 4. Get the required environment variables
-    const priceId = process.env.STRIPE_PRICE_ID || process.env.STRIPE_PREMIUM_PLAN_PRICE_ID;
+    let priceId = process.env.STRIPE_PRICE_ID || process.env.STRIPE_PREMIUM_PLAN_PRICE_ID;
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
     if (!priceId) {
       console.error("Missing STRIPE_PRICE_ID environment variable.");
       return NextResponse.json({ error: "Server Configuration Error" }, { status: 500 });
+    }
+
+    // If a Product ID was provided instead of a Price ID, fetch the associated Price dynamically
+    if (priceId.startsWith("prod_")) {
+      const prices = await stripe.prices.list({
+        product: priceId,
+        active: true,
+        limit: 1,
+      });
+
+      if (prices.data.length === 0) {
+        throw new Error(`No active price found for product: ${priceId}`);
+      }
+      
+      // Override with the actual Price ID
+      priceId = prices.data[0].id;
     }
 
     // 5. Create a Stripe Checkout Session
@@ -76,10 +92,10 @@ export async function POST() {
 
     // 7. Return the checkout session URL
     return NextResponse.json({ url: checkoutSession.url });
-  } catch (error) {
+  } catch (error: any) {
     console.error("[STRIPE_CHECKOUT_ERROR]", error);
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { error: error?.message || "Internal Server Error" },
       { status: 500 }
     );
   }

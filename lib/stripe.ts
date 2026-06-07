@@ -7,7 +7,7 @@ if (!process.env.STRIPE_SECRET_KEY) {
 // Initialize the Stripe instance using the secret key
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   // Updated for Stripe SDK v22.2.0
-  apiVersion: "2025-02-24.acacia" as any,
+  apiVersion: "2026-05-27.dahlia" as any,
   appInfo: {
     name: "Next.js Blog Premium App",
     version: "0.1.0",
