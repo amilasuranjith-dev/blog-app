@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import PremiumBadge from "@/components/PremiumBadge";
+import SubscribeButton from "@/components/SubscribeButton";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 export default async function SinglePostPage({
@@ -27,22 +28,35 @@ export default async function SinglePostPage({
   const { data: { user } } = await supabase.auth.getUser();
 
   let hasActiveSubscription = false;
+  let isAdmin = false;
 
   if (user && post.is_premium) {
-    const { data: subscription } = await supabase
-      .from("subscriptions")
-      .select("*")
-      .eq("user_id", user.id)
-      .eq("status", "active")
-      .gt("current_period_end", new Date().toISOString())
+    // Check if the user is an admin
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
       .single();
+      
+    if (profile?.role === "admin") {
+      isAdmin = true;
+    } else {
+      // If not an admin, check for active subscription
+      const { data: subscription } = await supabase
+        .from("subscriptions")
+        .select("*")
+        .eq("user_id", user.id)
+        .eq("status", "active")
+        .gt("current_period_end", new Date().toISOString())
+        .single();
 
-    if (subscription) {
-      hasActiveSubscription = true;
+      if (subscription) {
+        hasActiveSubscription = true;
+      }
     }
   }
 
-  const showFullContent = !post.is_premium || hasActiveSubscription;
+  const showFullContent = !post.is_premium || isAdmin || hasActiveSubscription;
 
   return (
     <article className="min-h-screen bg-zinc-50 px-6 py-12 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50">
@@ -91,11 +105,33 @@ export default async function SinglePostPage({
           {showFullContent ? (
             <div className="whitespace-pre-wrap">{post.content}</div>
           ) : (
-            <div className="relative">
-              <div className="whitespace-pre-wrap blur-[3px] opacity-60 select-none overflow-hidden max-h-40">
-                {post.content.slice(0, 150)}...
+            <div className="relative pb-24 mt-8">
+              {/* Blurred content preview */}
+              <div className="whitespace-pre-wrap blur-[5px] opacity-30 select-none overflow-hidden max-h-[150px] pointer-events-none">
+                {post.content.slice(0, 300)}...
               </div>
-              <PremiumBadge />
+              
+              {/* Overlay with CTA */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center pt-10">
+                <PremiumBadge />
+                <h3 className="mt-6 text-xl font-bold text-zinc-900 dark:text-zinc-50">
+                  Premium Content
+                </h3>
+                <p className="mt-2 mb-8 text-center text-zinc-600 dark:text-zinc-400 max-w-sm">
+                  This post is for premium subscribers only. Unlock full access to read this story and more.
+                </p>
+                
+                {user ? (
+                  <SubscribeButton />
+                ) : (
+                  <Link 
+                    href="/auth/login"
+                    className="rounded-full bg-zinc-900 px-8 py-3.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white"
+                  >
+                    Login to Subscribe
+                  </Link>
+                )}
+              </div>
             </div>
           )}
         </div>

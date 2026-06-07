@@ -58,34 +58,22 @@ export default async function DashboardPage() {
     <div className="min-h-[calc(100vh-64px)] bg-zinc-50 dark:bg-zinc-950 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto space-y-8">
         
-        {/* Header section with Welcome message and Profile */}
-        <header className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
-          <div className="space-y-2">
-            <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-              Subscriber Dashboard
-            </h1>
-            <p className="text-zinc-600 dark:text-zinc-400">
-              Welcome, <span className="font-medium text-zinc-900 dark:text-zinc-200">{user.email}</span>
+        {/* Header section with Welcome message */}
+        <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10">
+          <div>
+            <h1 className="text-3xl font-semibold tracking-tight">Subscriber Dashboard</h1>
+            <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
+              Welcome back, <span className="font-medium text-zinc-900 dark:text-zinc-100">{user.email}</span>
             </p>
-          </div>
-
-          <div className="w-full md:w-80 flex-shrink-0">
-            {/* Profile Settings Panel */}
-            <ProfileSettings 
-              userId={user.id} 
-              email={user.email || ""}
-              initialFullName={profile?.full_name || ""} 
-            />
           </div>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Top Row: Subscription and Profile */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           
-          {/* Left Column: Subscription Status */}
-          <section className="md:col-span-1 h-fit">
-            
-            {/* Subscription Status Panel */}
-            <div className="bg-white dark:bg-zinc-900/80 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-800 p-6">
+          {/* Subscription Status Panel */}
+          <section className="h-full">
+            <div className="h-full bg-white dark:bg-zinc-900/80 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-800 p-6 flex flex-col justify-center">
               <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50 mb-6">
                 Your Subscription
               </h2>
@@ -116,8 +104,19 @@ export default async function DashboardPage() {
             </div>
           </section>
 
-          {/* Premium Posts List */}
-          <section className="md:col-span-2">
+          {/* Profile Settings Panel */}
+          <section className="h-full">
+            <ProfileSettings 
+              userId={user.id} 
+              email={user.email || ""}
+              initialFullName={profile?.full_name || ""} 
+            />
+          </section>
+        </div>
+
+        {/* Bottom Row: Premium Posts List */}
+        <div className="w-full">
+          <section>
             <div className="bg-white dark:bg-zinc-900/80 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-800 p-6">
               <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50 mb-6">
                 Premium Content Library
@@ -154,7 +153,6 @@ export default async function DashboardPage() {
               )}
             </div>
           </section>
-          
         </div>
       </div>
     </div>
