@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import toast from "react-hot-toast";
+import RichTextEditor from "@/components/RichTextEditor";
 
 export default function EditPostPage({
   params,
@@ -219,20 +220,13 @@ export default function EditPostPage({
 
             <div className="space-y-2">
               <label
-                htmlFor="content"
-                className="block text-sm font-medium text-zinc-900 dark:text-zinc-100"
-              >
-                Content
-              </label>
-              <textarea
-                id="content"
-                required
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                placeholder="Write your post content here..."
-                className="w-full min-h-[300px] resize-y rounded-xl border border-zinc-300 bg-transparent px-4 py-3 text-sm text-zinc-900 placeholder-zinc-400 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-700 dark:text-zinc-50 dark:placeholder-zinc-500 dark:focus:border-zinc-100 dark:focus:ring-zinc-100 transition-colors"
-              />
-            </div>
+              htmlFor="content"
+              className="block text-sm font-medium text-zinc-900 dark:text-zinc-100"
+            >
+              Content
+            </label>
+            <RichTextEditor content={content} onChange={setContent} />
+          </div>
 
             <div className="grid gap-6 sm:grid-cols-2">
               <div className="space-y-2">

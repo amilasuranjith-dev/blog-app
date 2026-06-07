@@ -58,6 +58,11 @@ export default async function SinglePostPage({
 
   const showFullContent = !post.is_premium || isAdmin || hasActiveSubscription;
 
+  // Helper to safely strip HTML for previews
+  const stripHtml = (html: string) => {
+    return html ? html.replace(/<[^>]*>?/gm, '') : '';
+  };
+
   return (
     <article className="min-h-screen bg-zinc-50 px-6 py-12 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50">
       <div className="mx-auto w-full max-w-3xl space-y-10">
@@ -103,12 +108,12 @@ export default async function SinglePostPage({
 
         <div className="prose prose-lg prose-zinc dark:prose-invert max-w-none">
           {showFullContent ? (
-            <div className="whitespace-pre-wrap">{post.content}</div>
+            <div dangerouslySetInnerHTML={{ __html: post.content }} />
           ) : (
             <div className="relative pb-24 mt-8">
               {/* Blurred content preview */}
               <div className="whitespace-pre-wrap blur-[5px] opacity-30 select-none overflow-hidden max-h-[150px] pointer-events-none">
-                {post.content.slice(0, 300)}...
+                {stripHtml(post.content).slice(0, 300)}...
               </div>
               
               {/* Overlay with CTA */}
