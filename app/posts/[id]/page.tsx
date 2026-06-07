@@ -58,6 +58,11 @@ export default async function SinglePostPage({
 
   const showFullContent = !post.is_premium || isAdmin || hasActiveSubscription;
 
+  // Helper to safely strip HTML for previews
+  const stripHtml = (html: string) => {
+    return html ? html.replace(/<[^>]*>?/gm, '') : '';
+  };
+
   return (
     <article className="min-h-screen bg-zinc-50 px-6 py-12 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50">
       <div className="mx-auto w-full max-w-3xl space-y-10">
@@ -103,35 +108,27 @@ export default async function SinglePostPage({
 
         <div className="prose prose-lg prose-zinc dark:prose-invert max-w-none">
           {showFullContent ? (
-            <div className="whitespace-pre-wrap">{post.content}</div>
+            <div dangerouslySetInnerHTML={{ __html: post.content }} />
           ) : (
             <div className="relative pb-24 mt-8">
               {/* Blurred content preview */}
               <div className="whitespace-pre-wrap blur-[5px] opacity-30 select-none overflow-hidden max-h-[150px] pointer-events-none">
-                {post.content.slice(0, 300)}...
+                {stripHtml(post.content).slice(0, 300)}...
               </div>
               
               {/* Overlay with CTA */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center pt-10">
-                <PremiumBadge />
-                <h3 className="mt-6 text-xl font-bold text-zinc-900 dark:text-zinc-50">
-                  Premium Content
-                </h3>
-                <p className="mt-2 mb-8 text-center text-zinc-600 dark:text-zinc-400 max-w-sm">
-                  This post is for premium subscribers only. Unlock full access to read this story and more.
-                </p>
-                
+              <PremiumBadge>
                 {user ? (
                   <SubscribeButton />
                 ) : (
                   <Link 
                     href="/auth/login"
-                    className="rounded-full bg-zinc-900 px-8 py-3.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white"
+                    className="inline-flex w-full justify-center items-center rounded-xl bg-zinc-900 px-4 py-3 text-sm font-medium text-white shadow-sm hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 transition-all"
                   >
                     Login to Subscribe
                   </Link>
                 )}
-              </div>
+              </PremiumBadge>
             </div>
           )}
         </div>

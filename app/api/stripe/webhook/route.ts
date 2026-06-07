@@ -52,7 +52,7 @@ export async function POST(req: Request) {
 
         if (customerId && subscriptionId) {
           // Retrieve the subscription from Stripe to get current_period_end
-          const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+          const subscription: any = await stripe.subscriptions.retrieve(subscriptionId);
           
           // Defensively parse the period end date
           let periodEnd: string;
@@ -82,7 +82,7 @@ export async function POST(req: Request) {
       }
       
       case "customer.subscription.updated": {
-        const subscription = event.data.object as Stripe.Subscription;
+        const subscription: any = event.data.object;
         
         const { error } = await supabaseAdmin
           .from("subscriptions")
@@ -97,7 +97,7 @@ export async function POST(req: Request) {
       }
 
       case "customer.subscription.deleted": {
-        const subscription = event.data.object as Stripe.Subscription;
+        const subscription: any = event.data.object;
 
         const { error } = await supabaseAdmin
           .from("subscriptions")

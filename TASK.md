@@ -122,13 +122,13 @@ A blog publication app built with Next.js, Supabase, and Stripe.
 #### Phase 5 — Premium / Stripe Subscription
 | #   | Task                                              | Est. Time | Buffer | Status      |
 |-----|---------------------------------------------------|-----------|--------|-------------|
-| 5.1 | Stripe account setup + product/price create       | 25 min    | 15 min | [ ] Pending |
-| 5.2 | Install Stripe + create lib/stripe.ts             | 15 min    | 10 min | [ ] Pending |
-| 5.3 | Build Stripe checkout API route                   | 40 min    | 25 min | [ ] Pending |
-| 5.4 | Build SubscribeButton component                   | 25 min    | 15 min | [ ] Pending |
-| 5.5 | Build Stripe webhook handler                      | 50 min    | 30 min | [ ] Pending |
-| 5.6 | Build subscriber dashboard page                   | 40 min    | 20 min | [ ] Pending |
-| 5.7 | Premium access check on single post page          | 25 min    | 15 min | [ ] Pending |
+| 5.1 | Stripe account setup + product/price create       | 25 min    | 15 min | [x] Done    |
+| 5.2 | Install Stripe + create lib/stripe.ts             | 15 min    | 10 min | [x] Done    |
+| 5.3 | Build Stripe checkout API route                   | 40 min    | 25 min | [x] Done    |
+| 5.4 | Build SubscribeButton component                   | 25 min    | 15 min | [x] Done    |
+| 5.5 | Build Stripe webhook handler                      | 50 min    | 30 min | [x] Done    |
+| 5.6 | Build subscriber dashboard page                   | 40 min    | 20 min | [x] Done    |
+| 5.7 | Premium access check on single post page          | 25 min    | 15 min | [x] Done    |
 
 **Phase 5 Total: ~5 hours** (task: 3h 40min + buffer: 1h 50min)
 
@@ -145,9 +145,18 @@ A blog publication app built with Next.js, Supabase, and Stripe.
 
 **Phase 6 Total: ~3 hours** (task: 1h 55min + buffer: 1h)
 
-**✅ Day 3 Total: ~8 hours**
+**✅ Day 3 Total: ~8 hours + 1 hour = 9 hours **
 
----
+### Newly changed tasks: UX Enhancements
+
+#### Phase 7 — Rich Text Editor
+| #   | Task                                        | Est. Time | Buffer | Status      |
+|-----|---------------------------------------------|-----------|--------|-------------|
+| 7.1 | Install Tiptap & Tailwind Typography        | 10 min    | 0 min  | [x] Done    |
+| 7.2 | Create RichTextEditor component             | 30 min    | 0 min  | [x] Done    |
+| 7.3 | Implement Supabase inline image upload      | 20 min    | 0 min  | [x] Done    |
+
+**Phase 7 Total: ~1 hours**
 ---
 
 ## Summary
@@ -156,8 +165,8 @@ A blog publication app built with Next.js, Supabase, and Stripe.
 |-------|------------------|-----------------------------------|------------|
 | Day 1 | Phase 1 + 2      | Setup, Auth                       | 8 hrs      |
 | Day 2 | Phase 3 + 4      | Public Posts, Search, Admin CRUD  | 8 hrs      |
-| Day 3 | Phase 5 + 6      | Stripe, Deploy, Final docs        | 8 hrs      |
-| **Total** |              |                                   | **24 hrs** |
+| Day 3 | Phase 5 + 6 + 7  | Stripe, Deploy, Final docs        | 9 hrs      |
+| **Total** |              |                                   | **25 hrs** |
 
 > ⚠️ Buffer time is included per task — this accounts for reading docs,
 > debugging errors, and learning new concepts for the first time.

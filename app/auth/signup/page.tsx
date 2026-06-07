@@ -4,18 +4,31 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import toast from "react-hot-toast";
 
 export default function SignupPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setErrorMessage(null);
     setIsSubmitting(true);
+    
+    // Validations
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email address.");
+      setIsSubmitting(false);
+      return;
+    }
+    
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters.");
+      setIsSubmitting(false);
+      return;
+    }
 
     const supabase = createClient();
     const { error } = await supabase.auth.signUp({
@@ -24,11 +37,12 @@ export default function SignupPage() {
     });
 
     if (error) {
-      setErrorMessage(error.message);
+      toast.error(error.message);
       setIsSubmitting(false);
       return;
     }
 
+    toast.success("Account created successfully!");
     router.push("/");
     router.refresh();
   }
@@ -59,7 +73,7 @@ export default function SignupPage() {
               </p>
             </div>
 
-            <form className="mt-6 space-y-5" onSubmit={handleSubmit}>
+            <form className="mt-6 space-y-5" onSubmit={handleSubmit} noValidate>
               <div className="space-y-2">
                 <label htmlFor="email" className="text-sm font-medium">
                   Email
@@ -94,12 +108,6 @@ export default function SignupPage() {
                   placeholder="At least 6 characters"
                 />
               </div>
-
-              {errorMessage ? (
-                <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800 dark:border-red-900 dark:bg-red-950/40 dark:text-red-200">
-                  {errorMessage}
-                </div>
-              ) : null}
 
               <button
                 type="submit"
