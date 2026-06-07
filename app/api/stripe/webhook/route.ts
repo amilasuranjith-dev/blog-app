@@ -23,10 +23,14 @@ export async function POST(req: Request) {
 
   // 3. Verify webhook signature
   try {
+    if (!process.env.STRIPE_WEBHOOK_SECRET) {
+      throw new Error("STRIPE_WEBHOOK_SECRET is missing from environment variables. Please add it to .env.local and restart the server.");
+    }
+
     event = stripe.webhooks.constructEvent(
       body,
       signature,
-      process.env.STRIPE_WEBHOOK_SECRET!
+      process.env.STRIPE_WEBHOOK_SECRET
     );
   } catch (err: any) {
     console.error(`[WEBHOOK_ERROR] Signature verification failed: ${err.message}`);
@@ -49,6 +53,15 @@ export async function POST(req: Request) {
         if (customerId && subscriptionId) {
           // Retrieve the subscription from Stripe to get current_period_end
           const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+          
+          // Defensively parse the period end date
+          let periodEnd: string;
+          if (subscription && subscription.current_period_end) {
+            periodEnd = new Date(subscription.current_period_end * 1000).toISOString();
+          } else {
+            console.warn("[WEBHOOK_WARNING] current_period_end is missing. Using fallback 30 days.");
+            periodEnd = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+          }
 
           // Use the Supabase admin client to bypass RLS and update the subscriptions table
           const { error } = await supabaseAdmin
@@ -56,7 +69,7 @@ export async function POST(req: Request) {
             .update({
               stripe_subscription_id: subscriptionId,
               status: "active",
-              current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+              current_period_end: periodEnd,
             })
             .eq("stripe_customer_id", customerId);
             
