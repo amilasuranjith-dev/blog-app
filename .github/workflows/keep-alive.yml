@@ -1,0 +1,15 @@
+name: Keep Supabase Database Active
+
+on:
+  schedule:
+    # Runs every 3 days at 00:00 UTC
+    - cron: '0 0 */3 * *'
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+jobs:
+  ping-database:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping keep-alive endpoint
+        run: |
+          curl -f -s https://blog-app-three-lime-68.vercel.app/api/cron/keep-alive || echo "Ping failed"
