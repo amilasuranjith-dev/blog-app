@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import PremiumBadge from "@/components/PremiumBadge";
 import SubscribeButton from "@/components/SubscribeButton";
+import { sanitizePostHtml, stripHtml } from "@/lib/posts";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 export default async function SinglePostPage({
@@ -13,8 +15,8 @@ export default async function SinglePostPage({
   const { id } = await params;
   const supabase = await createServerSupabaseClient();
 
-  // Fetch the post
-  const { data: post, error: postError } = await supabase
+  // Fetch the post on the server so paywall previews work even when RLS restricts premium rows
+  const { data: post, error: postError } = await supabaseAdmin
     .from("posts")
     .select("*")
     .eq("id", id)
@@ -30,21 +32,21 @@ export default async function SinglePostPage({
   let hasActiveSubscription = false;
   let isAdmin = false;
 
-  if (user && post.is_premium) {
+  if (user) {
     // Check if the user is an admin
     const { data: profile } = await supabase
       .from("profiles")
       .select("role")
       .eq("id", user.id)
       .single();
-      
+
     if (profile?.role === "admin") {
       isAdmin = true;
-    } else {
+    } else if (post.is_premium) {
       // If not an admin, check for active subscription
       const { data: subscription } = await supabase
         .from("subscriptions")
-        .select("*")
+        .select("id")
         .eq("user_id", user.id)
         .eq("status", "active")
         .gt("current_period_end", new Date().toISOString())
@@ -56,12 +58,11 @@ export default async function SinglePostPage({
     }
   }
 
-  const showFullContent = !post.is_premium || isAdmin || hasActiveSubscription;
+  if (post.status !== "published" && !isAdmin) {
+    notFound();
+  }
 
-  // Helper to safely strip HTML for previews
-  const stripHtml = (html: string) => {
-    return html ? html.replace(/<[^>]*>?/gm, '') : '';
-  };
+  const showFullContent = !post.is_premium || isAdmin || hasActiveSubscription;
 
   return (
     <article className="min-h-screen bg-zinc-50 px-6 py-12 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50">
@@ -108,7 +109,7 @@ export default async function SinglePostPage({
 
         <div className="prose prose-lg prose-zinc dark:prose-invert max-w-none">
           {showFullContent ? (
-            <div dangerouslySetInnerHTML={{ __html: post.content }} />
+            <div dangerouslySetInnerHTML={{ __html: sanitizePostHtml(post.content) }} />
           ) : (
             <div className="relative pb-24 mt-8">
               {/* Blurred content preview */}

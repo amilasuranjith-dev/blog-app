@@ -1,12 +1,11 @@
 import PostCard, { type PostCardPost } from "@/components/PostCard";
-import { createServerSupabaseClient as createClient } from "@/lib/supabase/server";
+import { toPublicPostPreview } from "@/lib/posts";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const supabase = await createClient();
-
-  const { data: posts, error } = await supabase
+  const { data: posts, error } = await supabaseAdmin
     .from("posts")
     .select(
       "id, title, content, cover_image_url, is_premium, status, slug, created_at"
@@ -14,7 +13,7 @@ export default async function Home() {
     .eq("status", "published")
     .order("created_at", { ascending: false });
 
-  const postList = (posts ?? []) as PostCardPost[];
+  const postList = ((posts ?? []) as PostCardPost[]).map(toPublicPostPreview);
 
   return (
     <main className="min-h-screen bg-zinc-50 px-6 py-12 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50">
