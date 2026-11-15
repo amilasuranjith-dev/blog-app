@@ -1,6 +1,7 @@
 import Form from "next/form";
 import PostCard, { type PostCardPost } from "@/components/PostCard";
-import { createServerSupabaseClient as createClient } from "@/lib/supabase/server";
+import { toPublicPostPreview } from "@/lib/posts";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export const dynamic = "force-dynamic";
 
@@ -16,8 +17,7 @@ export default async function SearchPage({
   let errorMsg = "";
 
   if (query) {
-    const supabase = await createClient();
-    const { data: posts, error } = await supabase
+    const { data: posts, error } = await supabaseAdmin
       .from("posts")
       .select("id, title, content, cover_image_url, is_premium, status, slug, created_at")
       .eq("status", "published")
@@ -27,7 +27,7 @@ export default async function SearchPage({
     if (error) {
       errorMsg = error.message;
     } else {
-      postList = (posts ?? []) as PostCardPost[];
+      postList = ((posts ?? []) as PostCardPost[]).map(toPublicPostPreview);
     }
   }
 

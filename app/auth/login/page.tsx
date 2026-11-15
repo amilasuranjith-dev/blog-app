@@ -15,36 +15,43 @@ export default function LoginPage() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsSubmitting(true);
-    
+
+    const trimmedEmail = email.trim();
+
     // Validations
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(trimmedEmail)) {
       toast.error("Please enter a valid email address.");
       setIsSubmitting(false);
       return;
     }
-    
+
     if (!password) {
       toast.error("Please enter your password.");
       setIsSubmitting(false);
       return;
     }
 
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.auth.signInWithPassword({
+        email: trimmedEmail,
+        password,
+      });
 
-    if (error) {
-      toast.error(error.message);
+      if (error) {
+        toast.error(error.message);
+        setIsSubmitting(false);
+        return;
+      }
+
+      toast.success("Welcome back!");
+      router.push("/");
+      router.refresh();
+    } catch {
+      toast.error("Unable to sign in right now. Please try again.");
       setIsSubmitting(false);
-      return;
     }
-
-    toast.success("Welcome back!");
-    router.push("/");
-    router.refresh();
   }
 
   return (

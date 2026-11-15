@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import SubscribeButton from "@/components/SubscribeButton";
 import ProfileSettings from "@/components/ProfileSettings";
@@ -36,8 +37,8 @@ export default async function DashboardPage() {
     .eq("id", user.id)
     .single();
 
-  // 4. Fetch all published premium posts
-  const { data: premiumPosts } = await supabase
+  // 4. Fetch all published premium post titles (metadata only, via service role)
+  const { data: premiumPosts } = await supabaseAdmin
     .from("posts")
     .select("id, title, created_at")
     .eq("is_premium", true)

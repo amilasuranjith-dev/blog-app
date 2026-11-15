@@ -27,11 +27,16 @@ create trigger on_auth_user_created
 -- Profiles RLS
 alter table public.profiles enable row level security;
 
-create policy "Public profiles are viewable by everyone"
-  on public.profiles for select using (true);
+create policy "Users can view own profile"
+  on public.profiles for select using (auth.uid() = id);
 
 create policy "Users can update own profile"
-  on public.profiles for update using (auth.uid() = id);
+  on public.profiles for update
+  using (auth.uid() = id)
+  with check (
+    auth.uid() = id
+    and role = (select role from public.profiles where id = auth.uid())
+  );
 
 
 -- ==========================================
@@ -53,8 +58,23 @@ create table public.posts (
 -- Posts RLS
 alter table public.posts enable row level security;
 
-create policy "Published posts viewable by everyone"
-  on public.posts for select using (status = 'published');
+create policy "Published free or entitled posts viewable"
+  on public.posts for select using (
+    status = 'published'
+    and (
+      is_premium = false
+      or exists (
+        select 1 from public.profiles
+        where id = auth.uid() and role = 'admin'
+      )
+      or exists (
+        select 1 from public.subscriptions
+        where user_id = auth.uid()
+          and status = 'active'
+          and current_period_end > now()
+      )
+    )
+  );
 
 create policy "Admin can do everything on posts"
   on public.posts for all using (
@@ -84,11 +104,8 @@ alter table public.subscriptions enable row level security;
 create policy "Users can view own subscription"
   on public.subscriptions for select using (auth.uid() = user_id);
 
-create policy "Users can insert own subscription"
-  on public.subscriptions for insert with check (auth.uid() = user_id);
-
-create policy "Users can update own subscription"
-  on public.subscriptions for update using (auth.uid() = user_id);
+-- Note: INSERT and UPDATE on public.subscriptions are intentionally restricted
+-- to server-side service_role (Stripe checkout/webhook) so users cannot self-activate.
 
 
 -- ==========================================

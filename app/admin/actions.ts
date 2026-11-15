@@ -6,6 +6,24 @@ import { revalidatePath } from "next/cache";
 export async function deletePost(id: string) {
   const supabase = await createClient();
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (profile?.role !== "admin") {
+    throw new Error("Forbidden: admin access required");
+  }
+
   // Fetch the post first to see if it has a cover image
   const { data: post } = await supabase
     .from("posts")
