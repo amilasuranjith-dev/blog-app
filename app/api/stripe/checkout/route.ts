@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 export async function POST() {
@@ -33,14 +34,14 @@ export async function POST() {
 
       customerId = customer.id;
 
-      // Store in subscriptions table
+      // Store in subscriptions table via service role (client INSERT/UPDATE blocked by RLS)
       if (subscription) {
-        await supabase
+        await supabaseAdmin
           .from("subscriptions")
           .update({ stripe_customer_id: customerId })
           .eq("user_id", user.id);
       } else {
-        await supabase.from("subscriptions").insert({
+        await supabaseAdmin.from("subscriptions").insert({
           user_id: user.id,
           stripe_customer_id: customerId,
         });
